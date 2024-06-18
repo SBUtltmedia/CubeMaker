@@ -1,20 +1,25 @@
 import sys
-funkey=int(sys.argv[2])
+import math
 size = int(sys.argv[1])
 halfBox=5
 boxsize = halfBox*2
 FunSet = []
-def MakeBinaryFunc(p,q,FuncIdx):
-    funcs=[]
-    for i in [p,q,FuncIdx]:
-        funcs.append(list(bin(i)[2:].rjust(4, '0')[::-1]))
+def MakeBinaryFunc(FuncIdx):
+    return  list(bin(FuncIdx)[2:].rjust(4, '0')[::-1])
     ReturnVal = 0
     for i in range(4):
         ReturnVal+=int(funcs[2][int(funcs[0][i]) + 2* int(funcs[1][i])])*2**i
     return ReturnVal
 
-
-
+def returnFunVal(p,q,funcIdx):
+    digitCount=int(math.sqrt(size))
+    pList= list(bin(p)[2:].rjust( digitCount, '0')[::-1])
+    qList= list(bin(q)[2:].rjust( digitCount, '0')[::-1])
+    func= MakeBinaryFunc(funcIdx)   
+    ReturnVal = 0
+    for i in range(digitCount):
+        ReturnVal+=int(func[int(pList[i]) + 2* int(qList[i])])*2**i
+    return ReturnVal
 verts=size*size
 def b_or(p,q):
     return p|q
@@ -55,7 +60,7 @@ for h in range(4):
         for i in range(size):
             for j in range(size):
                 for k in range(size):
-                    fun = MakeBinaryFunc(i,j,h+(v*4))
+                    fun = returnFunVal(i,j,h+(v*4))
                     if k == fun:
                         for l in range(k+1):
                             faces+=makeNthCube(boxCount)
